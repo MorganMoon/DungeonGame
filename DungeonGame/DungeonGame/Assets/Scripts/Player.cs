@@ -15,22 +15,24 @@ public class Player : MonoBehaviour {
     private float endurance; //Player endurance stat -- gives more max hp?
 
     //Player gear
-    private GameItem helmet; //Player Helmet Gear
-    private GameItem chest; //Player Chest Gear
-    private GameItem legs; //Player Leg Gear
-    private GameItem weapon; //Players weapon
+    private HeadItem helmet; //Player Helmet Gear
+    private ChestItem chest; //Player Chest Gear
+    private LegItem legs; //Player Leg Gear
+    private WeaponItem weapon; //Players weapon
 
-    private GameItem[] inventory; //Players inventory of gear/crap
+    private GameItem[] inventory = new GameItem[20]; //Players inventory of gear/crap
 
 	// Use this for initialization
 	void Start () {
-        this.curhp = GetMaxHP();
+        this.curhp = GetMaxHP(); //heals player all the way at start
 
-        //temporary
-        helmet = new GameItem(5);
-        chest = new GameItem(5);
-        legs = new GameItem(5);
-        weapon = new GameItem(5);
+        //temporary for testing
+        helmet = new HeadItem("Helmet Of Doom", 5, 3, 2, 1);
+        chest = new ChestItem("Chain Mail Chest", 5, 5, 1, 3);
+        legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
+        weapon = new WeaponItem("Sword Of Smite", 5, 2, 5, 1);
+
+        inventory[2] = new LegItem("Worthless pants", 1, 2, 3, 2);
 	}
 	
 	// Update is called once per frame
@@ -67,19 +69,19 @@ public class Player : MonoBehaviour {
     {
         return this.endurance;
     }
-    public GameItem GetHelmet() //Gets current HeadItem 'helmet'
+    public HeadItem GetHelmet() //Gets current HeadItem 'helmet'
     {
         return this.helmet;
     }
-    public GameItem GetChest() //Gets current ChestItem 'chest'
+    public ChestItem GetChest() //Gets current ChestItem 'chest'
     {
         return this.chest;
     }
-    public GameItem GetLegs() //Gets current LegItem 'legs'
+    public LegItem GetLegs() //Gets current LegItem 'legs'
     {
         return this.legs;
     }
-    public GameItem GetWeapon() //Gets current WeaponItem 'weapon'
+    public WeaponItem GetWeapon() //Gets current WeaponItem 'weapon'
     {
         return this.weapon;
     }
