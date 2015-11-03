@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
     private GameItem legs; //Player Leg Gear
     private GameItem weapon; //Players weapon
 
+    private GameItem[] inventory; //Players inventory of gear/crap
+
 	// Use this for initialization
 	void Start () {
         this.curhp = GetMaxHP();
