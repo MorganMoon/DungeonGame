@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
 	void Start () {
         this.curhp = GetMaxHP(); //heals player all the way at start
 
-        //temporary for testing
+        //all stuff below temporary for testing
         helmet = new HeadItem("Helmet Of Doom", 10, 3, 2, 5, 4);
         chest = new ChestItem("Chain Mail Chest", 5, 5, 1, 3, 3);
         //legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
@@ -39,20 +39,36 @@ public class Player : MonoBehaviour {
         legs = (LegItem)inventory[0];
 
         SetStats(); 
+        UseEndurance();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+        RegenHP();
 	}
 
     //Methods
-    public void SetStats()
+    public void SetStats() //Method SetStats takes all of the stats from equipt armor and applies it to the player
     {
         this.defense = helmet.GetDefense() + chest.GetDefense() + legs.GetDefense() + weapon.GetDefense();
         this.strength = helmet.GetStrength() + chest.GetStrength() + legs.GetStrength() + weapon.GetStrength();
         this.endurance = helmet.GetEndurance() + chest.GetEndurance() + legs.GetEndurance() + weapon.GetEndurance();
         this.crit = helmet.GetCrit() + chest.GetCrit() + legs.GetCrit() + weapon.GetCrit();
+    }
+    public void UseEndurance() //Method UseEndurance takes eache endurance point and adds it to the players float maxHP
+    {
+        maxhp += this.endurance;
+    }
+    public void RegenHP() //Method RegenHP checks if curHp is less than max HP and if it is, it heals the player and stops at maxhp
+    {
+        if (GetCurHP() < GetMaxHP())
+        {
+            this.curhp += Time.deltaTime / 5;
+        }
+        else if(GetCurHP() >= GetMaxHP())
+        {
+            this.curhp = GetMaxHP();
+        }
     }
 
 
