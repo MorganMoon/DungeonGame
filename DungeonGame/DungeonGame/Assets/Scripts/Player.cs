@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour {
     private LegItem legs; //Player Leg Gear
     private WeaponItem weapon; //Players weapon
 
-    private GameItem[] inventory = new GameItem[20]; //Players inventory of gear/crap
+    private List<GameItem> inventory = new List<GameItem>(); //Players inventory of gear/crap
 
 	// Use this for initialization
 	void Start () {
@@ -29,16 +30,28 @@ public class Player : MonoBehaviour {
         //temporary for testing
         helmet = new HeadItem("Helmet Of Doom", 5, 3, 2, 1);
         chest = new ChestItem("Chain Mail Chest", 5, 5, 1, 3);
-        legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
-        weapon = new WeaponItem("Sword Of Smite", 5, 2, 5, 1);
+        //legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
+        weapon = new WeaponItem("Sword Of Smite", 5, 2, 5, 1, 2, 5);
 
-        inventory[2] = new LegItem("Worthless pants", 1, 2, 3, 2);
+        inventory.Add(new LegItem("Steel Plated Legs", 5, 2, 7, 3));
+        legs = (LegItem)inventory[0];
+
+        SetStats();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+    //Methods
+    public void SetStats()
+    {
+        this.defense = helmet.GetDefense() + chest.GetDefense() + legs.GetDefense() + weapon.GetDefense();
+        this.strength = helmet.GetStrength() + chest.GetStrength() + legs.GetStrength() + weapon.GetStrength();
+        this.endurance = helmet.GetEndurance() + chest.GetEndurance() + legs.GetEndurance() + weapon.GetEndurance();
+    }
+
 
     //Getters
     public float GetMaxHP() //Gets current float 'maxhp'

@@ -32,4 +32,10 @@ public class GameItem {
     {
         this.itemName = itemName;
     }
+
+    //ToString method
+    public string ToString()
+    {
+        return GetItemName() + " is worth: " + GetGoldWorth();
+    }
 }
