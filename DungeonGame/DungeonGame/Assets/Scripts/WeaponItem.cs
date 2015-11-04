@@ -9,17 +9,21 @@ public class WeaponItem : GameItem
     private float defense; //Weapon defense stat
     private float strength; //Weapon strength stat
     private float endurance; //Weapon endurance stat
+    private float crit; //Weapon crit stat
+    private int reqLevel; // Weapon required level to equip
 
     //weapon stats
     private Vector2 damage; //Weapon damage ranges (#-#)
 
     //WeaponItem constructor
-    public WeaponItem(string itemName, int goldWorth, float defense, float strength, float endurance, float minDamage, float maxDamage) : base(itemName, goldWorth)
+    public WeaponItem(string itemName, int goldWorth, float defense, float endurance, float strength, float crit, float minDamage, float maxDamage) : base(itemName, goldWorth)
     {
         SetDefense(defense);
         SetStrength(strength);
         SetEndurance(endurance);
+        SetCrit(crit);
         SetDamage(minDamage, maxDamage);
+        SetReqLevel((int)Mathf.Max(Mathf.Max(defense, endurance), Mathf.Max(strength, crit)));
     }
 
     //getters
@@ -35,9 +39,17 @@ public class WeaponItem : GameItem
     {
         return this.endurance;
     }
+    public float GetCrit() //Gets current float 'crit'
+    {
+        return this.endurance;
+    }
     public Vector2 getDamage() //Gets current Vector2 'damage'
     {
         return this.damage;
+    }
+    public int GetReqLevel() //Gets current int 'reqLevel'
+    {
+        return this.reqLevel;
     }
 
     //setters
@@ -53,8 +65,16 @@ public class WeaponItem : GameItem
     {
         this.endurance = endurance;
     }
+    public void SetCrit(float crit) //Sets float 'crit'
+    {
+        this.crit = crit;
+    }
     public void SetDamage(float minDamage, float maxDamage) //sets Vector2 'damage'
     {
         this.damage = new Vector2(minDamage, maxDamage);
+    }
+    public void SetReqLevel(int reqLevel) //Sets int 'reqLevel'
+    {
+        this.reqLevel = reqLevel;
     }
 }

@@ -5,15 +5,17 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
     //Basic player stats
-    private float maxhp; //Player max health
+    private float maxhp = 10.0f; //Player max health
     private float curhp; //Player current health
     private int level = 1; //Player Level
     private int gold = 1; //Player money
 
     //Advanced player stats
     private float defense; //Player defense stat -- health doesnt go down as much when hit?
-    private float strength; //Player stength stat  -- hits harder?
     private float endurance; //Player endurance stat -- gives more max hp?
+    private float strength; //Player stength stat  -- hits harder?
+    private float crit; // Player crit stat -- chance of multiplying hit by 2?
+    
 
     //Player gear
     private HeadItem helmet; //Player Helmet Gear
@@ -28,15 +30,15 @@ public class Player : MonoBehaviour {
         this.curhp = GetMaxHP(); //heals player all the way at start
 
         //temporary for testing
-        helmet = new HeadItem("Helmet Of Doom", 5, 3, 2, 1);
-        chest = new ChestItem("Chain Mail Chest", 5, 5, 1, 3);
+        helmet = new HeadItem("Helmet Of Doom", 10, 3, 2, 5, 4);
+        chest = new ChestItem("Chain Mail Chest", 5, 5, 1, 3, 3);
         //legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
-        weapon = new WeaponItem("Sword Of Smite", 5, 2, 5, 1, 2, 5);
+        weapon = new WeaponItem("Sword Of Smite", 5, 2, 5, 1, 4, 2, 5);
 
-        inventory.Add(new LegItem("Steel Plated Legs", 5, 2, 7, 3));
+        inventory.Add(new LegItem("Steel Plated Legs", 5, 2, 7, 3, 4));
         legs = (LegItem)inventory[0];
 
-        SetStats();
+        SetStats(); 
 	}
 	
 	// Update is called once per frame
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour {
         this.defense = helmet.GetDefense() + chest.GetDefense() + legs.GetDefense() + weapon.GetDefense();
         this.strength = helmet.GetStrength() + chest.GetStrength() + legs.GetStrength() + weapon.GetStrength();
         this.endurance = helmet.GetEndurance() + chest.GetEndurance() + legs.GetEndurance() + weapon.GetEndurance();
+        this.crit = helmet.GetCrit() + chest.GetCrit() + legs.GetCrit() + weapon.GetCrit();
     }
 
 
@@ -77,6 +80,10 @@ public class Player : MonoBehaviour {
     public float GetStrength() //Gets current float 'strength'
     {
         return this.strength;
+    }
+    public float GetCrit() //Gets current float 'crit'
+    {
+        return this.crit;
     }
     public float GetEndurance() // Gets current float 'endurance'
     {

@@ -9,12 +9,16 @@ public class LegItem : GameItem
     private float defense;
     private float strength;
     private float endurance;
+    private float crit;
+    private int reqLevel;
 
-    public LegItem(string itemName, int goldWorth, float defense, float strength, float endurance) : base(itemName, goldWorth)
+    public LegItem(string itemName, int goldWorth, float defense, float endurance, float strength, float crit) : base(itemName, goldWorth)
     {
         SetDefense(defense);
         SetStrength(strength);
         SetEndurance(endurance);
+        SetCrit(crit);
+        SetReqLevel((int)Mathf.Max(Mathf.Max(defense, endurance), Mathf.Max(strength, crit)));
     }
 
     //getters
@@ -30,6 +34,14 @@ public class LegItem : GameItem
     {
         return this.endurance;
     }
+    public float GetCrit()
+    {
+        return this.endurance;
+    }
+    public int GetReqLevel()
+    {
+        return this.reqLevel;
+    }
 
     //setters
     public void SetDefense(float defense)
@@ -43,5 +55,13 @@ public class LegItem : GameItem
     public void SetEndurance(float endurance)
     {
         this.endurance = endurance;
+    }
+    public void SetCrit(float crit)
+    {
+        this.crit = crit;
+    }
+    public void SetReqLevel(int reqLevel)
+    {
+        this.reqLevel = reqLevel;
     }
 }
