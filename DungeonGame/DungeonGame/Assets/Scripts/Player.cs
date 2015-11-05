@@ -30,16 +30,17 @@ public class Player : MonoBehaviour {
         this.curhp = GetMaxHP(); //heals player all the way at start
 
         //all stuff below temporary for testing
-        helmet = new HeadItem("Helmet Of Doom", 10, 3, 2, 5, 4);
-        chest = new ChestItem("Chain Mail Chest", 5, 5, 1, 3, 3);
+        helmet = new HeadItem("Worn Leather Helmet", 1, 0, 0, 0, 0);
+        chest = new ChestItem("Worn Leather Chest", 1, 0, 0, 0, 0);
         //legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
-        weapon = new WeaponItem("Sword Of Smite", 5, 2, 5, 1, 4, 2, 5);
+        weapon = new WeaponItem("Worn Practice Sword", 1, 0, 0, 0, 0, 1, 2);
 
         inventory.Add(new LegItem("Steel Plated Legs", 5, 2, 7, 3, 4));
         legs = (LegItem)inventory[0];
 
-        SetStats(); 
         UseEndurance();
+        CheckLevelReq();
+        SetStats(); 
 	}
 	
 	// Update is called once per frame
@@ -68,6 +69,33 @@ public class Player : MonoBehaviour {
         else if(GetCurHP() >= GetMaxHP())
         {
             this.curhp = GetMaxHP();
+        }
+    }
+    public void CheckLevelReq()
+    {
+        if (GetHelmet().GetReqLevel() > GetLevel())
+        {
+            Debug.Log(GetHelmet().GetItemName() + "required level: " + GetHelmet().GetReqLevel() + " Player is only level: " + GetLevel());
+            inventory.Add(GetHelmet());
+            this.helmet = null;
+        }
+        if (GetChest().GetReqLevel() > GetLevel())
+        {
+            Debug.Log(GetChest().GetItemName() + " required level: " + GetChest().GetReqLevel() + " Player is only level: " + GetLevel());
+            inventory.Add(GetChest());
+            this.chest = null;
+        }
+        if (GetLegs().GetReqLevel() > GetLevel())
+        {
+            Debug.Log(GetLegs().GetItemName() + " required level: " + GetLegs().GetReqLevel() + " Player is only level: " + GetLevel());
+            inventory.Add(GetLegs());
+            this.legs = null;
+        }
+        if (GetWeapon().GetReqLevel() > GetLevel())
+        {
+            Debug.Log(GetWeapon().GetItemName() + " required level: " + GetWeapon().GetReqLevel() + " Player is only level: " + GetLevel());
+            inventory.Add(GetWeapon());
+            this.weapon = null;
         }
     }
 
