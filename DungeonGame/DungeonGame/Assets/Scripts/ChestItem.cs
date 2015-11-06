@@ -36,7 +36,7 @@ public class ChestItem : GameItem
     }
     public float GetCrit()
     {
-        return this.endurance;
+        return this.crit;
     }
     public int GetReqLevel()
     {

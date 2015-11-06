@@ -41,7 +41,7 @@ public class WeaponItem : GameItem
     }
     public float GetCrit() //Gets current float 'crit'
     {
-        return this.endurance;
+        return this.crit;
     }
     public Vector2 getDamage() //Gets current Vector2 'damage'
     {

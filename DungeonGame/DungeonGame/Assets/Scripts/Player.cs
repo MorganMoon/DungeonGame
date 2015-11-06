@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
     //Basic player stats
     private float maxhp = 10.0f; //Player max health
     private float curhp; //Player current health
-    private int level = 1; //Player Level
+    private int level = 5; //Player Level
     private int gold = 1; //Player money
 
     //Advanced player stats
@@ -30,31 +30,62 @@ public class Player : MonoBehaviour {
         this.curhp = GetMaxHP(); //heals player all the way at start
 
         //all stuff below temporary for testing
-        helmet = new HeadItem("Worn Leather Helmet", 1, 0, 0, 0, 0);
-        chest = new ChestItem("Worn Leather Chest", 1, 0, 0, 0, 0);
+        helmet = new HeadItem("Worn Leather Helmet", 10, 0, 20, 0, 0);
+        chest = new ChestItem("Worn Leather Chest", 1, 0, 3, 0, 0);
         //legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
         weapon = new WeaponItem("Worn Practice Sword", 1, 0, 0, 0, 0, 1, 2);
+        inventory.Add(new LegItem("Worn Leather Leggings", 1, 0, 0, 0, 0));
+        //legs = (LegItem)inventory[0];
 
-        inventory.Add(new LegItem("Steel Plated Legs", 5, 2, 7, 3, 4));
-        legs = (LegItem)inventory[0];
-
-        UseEndurance();
         CheckLevelReq();
-        SetStats(); 
+        SetStats();
+        UseEndurance();
 	}
 	
 	// Update is called once per frame
 	void Update () {
         RegenHP();
+        GiveControl();
 	}
 
     //Methods
+    public void GiveControl()
+    {
+        GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * 5, 0.5f), Mathf.Lerp(0, Input.GetAxis("Vertical") * 5, 0.5f));
+    }
     public void SetStats() //Method SetStats takes all of the stats from equipt armor and applies it to the player
     {
-        this.defense = helmet.GetDefense() + chest.GetDefense() + legs.GetDefense() + weapon.GetDefense();
-        this.strength = helmet.GetStrength() + chest.GetStrength() + legs.GetStrength() + weapon.GetStrength();
-        this.endurance = helmet.GetEndurance() + chest.GetEndurance() + legs.GetEndurance() + weapon.GetEndurance();
-        this.crit = helmet.GetCrit() + chest.GetCrit() + legs.GetCrit() + weapon.GetCrit();
+        //reset stats
+        this.defense = 0; this.strength = 0; this.endurance = 0; this.crit = 0;
+        //Set Helmet stats
+        if (GetHelmet() != null)
+        {
+            this.defense += GetHelmet().GetDefense();
+            this.strength += GetHelmet().GetStrength();
+            this.endurance += GetHelmet().GetEndurance();
+            this.crit += GetHelmet().GetCrit();
+        }
+        if (GetChest() != null)
+        {
+            this.defense += GetChest().GetDefense();
+            this.strength += GetChest().GetStrength();
+            this.endurance += GetChest().GetEndurance();
+            this.crit += GetChest().GetCrit();
+        }
+        if (GetLegs() != null)
+        {
+            this.defense += GetLegs().GetDefense();
+            this.strength += GetLegs().GetStrength();
+            this.endurance += GetLegs().GetEndurance();
+            this.crit += GetLegs().GetCrit();
+        }
+        if (GetWeapon() != null)
+        {
+            this.defense += GetWeapon().GetDefense();
+            this.strength += GetWeapon().GetStrength();
+            this.endurance += GetWeapon().GetEndurance();
+            this.crit += GetWeapon().GetCrit();
+        }
     }
     public void UseEndurance() //Method UseEndurance takes eache endurance point and adds it to the players float maxHP
     {
@@ -71,27 +102,27 @@ public class Player : MonoBehaviour {
             this.curhp = GetMaxHP();
         }
     }
-    public void CheckLevelReq()
+    public void CheckLevelReq() //Method CheckLevelReq gets the required level of each peice of equipt armor and will put it back in the inventory if it is too high of a level
     {
-        if (GetHelmet().GetReqLevel() > GetLevel())
+        if (GetHelmet() != null && GetHelmet().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetHelmet().GetItemName() + "required level: " + GetHelmet().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetHelmet());
             this.helmet = null;
         }
-        if (GetChest().GetReqLevel() > GetLevel())
+        if (GetChest() != null && GetChest().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetChest().GetItemName() + " required level: " + GetChest().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetChest());
             this.chest = null;
         }
-        if (GetLegs().GetReqLevel() > GetLevel())
+        if (GetLegs() != null && GetLegs().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetLegs().GetItemName() + " required level: " + GetLegs().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetLegs());
             this.legs = null;
         }
-        if (GetWeapon().GetReqLevel() > GetLevel())
+        if (GetWeapon() != null && GetWeapon().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetWeapon().GetItemName() + " required level: " + GetWeapon().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetWeapon());
