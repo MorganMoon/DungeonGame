@@ -3,6 +3,7 @@ using System.Collections;
 
 [System.Serializable]
 public class GameItem {
+
     //Basic item stats
     private int goldWorth; //The amount of gold this item is worth
     private string itemName; //The name of the item
@@ -13,6 +14,8 @@ public class GameItem {
         SetGoldWorth(goldWorth);
     }
 
+    //Methods
+    
     //getters
     public int GetGoldWorth() //Gets int 'goldWorth'
     {
@@ -34,7 +37,7 @@ public class GameItem {
     }
 
     //ToString method
-    public string ToString()
+    public override string ToString()
     {
         return GetItemName() + " is worth: " + GetGoldWorth();
     }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class Player : MonoBehaviour {
 
@@ -30,11 +31,11 @@ public class Player : MonoBehaviour {
         this.curhp = GetMaxHP(); //heals player all the way at start
 
         //all stuff below temporary for testing
-        helmet = new HeadItem("Worn Leather Helmet", 10, 0, 20, 0, 0);
-        chest = new ChestItem("Worn Leather Chest", 1, 0, 3, 0, 0);
-        //legs = new LegItem("Steel Plated Legs", 5, 2, 7, 3);
-        weapon = new WeaponItem("Worn Practice Sword", 1, 0, 0, 0, 0, 1, 2);
-        inventory.Add(new LegItem("Worn Leather Leggings", 1, 0, 0, 0, 0));
+        SetHelmet(new HeadItem("Worn Leather Helmet", 10, 0, 1, 0, 0));
+        SetChest(new ChestItem("Worn Leather Chest", 1, 0, 3, 0, 0));
+        SetWeapon(new WeaponItem("Worn Practice Sword", 1, 0, 0, 0, 1, 1, 2));
+
+        inventory.Add(new HeadItem("Trashy Hat", 1, 0, 0, 0, 0));
         //legs = (LegItem)inventory[0];
 
         CheckLevelReq();
@@ -46,6 +47,12 @@ public class Player : MonoBehaviour {
 	void Update () {
         RegenHP();
         GiveControl();
+
+        //TESTING BELOW -- TEMPORARY
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Equip(inventory[0]);
+        }
 	}
 
     //Methods
@@ -99,7 +106,7 @@ public class Player : MonoBehaviour {
         }
         else if(GetCurHP() >= GetMaxHP())
         {
-            this.curhp = GetMaxHP();
+            SetCurHP(GetMaxHP());
         }
     }
     public void CheckLevelReq() //Method CheckLevelReq gets the required level of each peice of equipt armor and will put it back in the inventory if it is too high of a level
@@ -108,25 +115,68 @@ public class Player : MonoBehaviour {
         {
             Debug.Log(GetHelmet().GetItemName() + "required level: " + GetHelmet().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetHelmet());
-            this.helmet = null;
+            SetHelmet(null);
         }
         if (GetChest() != null && GetChest().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetChest().GetItemName() + " required level: " + GetChest().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetChest());
-            this.chest = null;
+            SetChest(null);
         }
         if (GetLegs() != null && GetLegs().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetLegs().GetItemName() + " required level: " + GetLegs().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetLegs());
-            this.legs = null;
+            SetLegs(null);
         }
         if (GetWeapon() != null && GetWeapon().GetReqLevel() > GetLevel())
         {
             Debug.Log(GetWeapon().GetItemName() + " required level: " + GetWeapon().GetReqLevel() + " Player is only level: " + GetLevel());
             inventory.Add(GetWeapon());
-            this.weapon = null;
+            SetWeapon(null);
+        }
+    }
+    public void Equip(GameItem item)
+    {
+        if (item is HeadItem)
+        {
+            inventory.Remove(item);
+            if (GetHelmet() != null)
+            {
+                inventory.Add(GetHelmet());
+            }
+            SetHelmet((HeadItem)item);
+        }
+        else if (item is ChestItem)
+        {
+            inventory.Remove(item);
+            if (GetChest() != null)
+            {
+                inventory.Add(GetChest());
+            }
+            SetChest((ChestItem)item);
+        }
+        else if (item is LegItem)
+        {
+            inventory.Remove(item);
+            if (GetLegs() != null)
+            {
+                inventory.Add(GetLegs());
+            }
+            SetLegs((LegItem)item);
+        }
+        else if (item is WeaponItem)
+        {
+            inventory.Remove(item);
+            if (GetWeapon() != null)
+            {
+                inventory.Add(GetWeapon());
+            }
+            SetWeapon((WeaponItem)item);
+        }
+        else
+        {
+            throw new Exception("Don't know how to equip " + item.GetType() + " Yet!");
         }
     }
 
@@ -180,4 +230,55 @@ public class Player : MonoBehaviour {
     {
         return this.weapon;
     }
+
+    //setters
+    public void SetMaxHP(float maxhp) //Gets current float 'maxhp'
+    {
+        this.maxhp = maxhp;
+    }
+    public void SetCurHP(float curhp) //Gets current float 'curhp'
+    {
+        this.curhp = curhp;
+    }
+    public void SetLevel(int level) //Gets current int 'level'
+    {
+        this.level = level;
+    }
+    public void SetGold(int gold) //Gets current int 'gold'
+    {
+        this.gold = gold;
+    }
+    public void SetDefense(float defense) //Gets current float 'defense'
+    {
+        this.defense = defense;
+    }
+    public void SetStrength(float strength) //Gets current float 'strength'
+    {
+        this.strength = strength;
+    }
+    public void SetCrit(float crit) //Gets current float 'crit'
+    {
+        this.crit = crit;
+    }
+    public void SetEndurance(float endurance) // Gets current float 'endurance'
+    {
+        this.endurance = endurance;
+    }
+    public void SetHelmet(HeadItem helmet) //Gets current HeadItem 'helmet'
+    {
+        this.helmet = helmet;
+    }
+    public void SetChest(ChestItem chext) //Gets current ChestItem 'chest'
+    {
+        this.chest = chext;
+    }
+    public void SetLegs(LegItem legs) //Gets current LegItem 'legs'
+    {
+        this.legs = legs;
+    }
+    public void SetWeapon(WeaponItem weapon) //Gets current WeaponItem 'weapon'
+    {
+        this.weapon = weapon;
+    }
+
 }
