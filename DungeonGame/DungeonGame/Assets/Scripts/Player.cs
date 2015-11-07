@@ -5,6 +5,10 @@ using System;
 
 public class Player : MonoBehaviour {
 
+    //Player Control variables
+    private float speed = 5;
+    Vector3 mouseCamera = Vector3.zero;
+
     //Basic player stats
     private float maxhp = 10.0f; //Player max health
     private float curhp; //Player current health
@@ -34,10 +38,7 @@ public class Player : MonoBehaviour {
         SetHelmet(new HeadItem(1));
         SetChest(new ChestItem(1));
         SetWeapon(new WeaponItem(1));
-
-        inventory.Add(new LegItem(1));
-        inventory.Add(new GameItem());
-        //legs = (LegItem)inventory[0];
+        SetLegs(new LegItem(1));
 
         CheckLevelReq();
         SetStats();
@@ -54,12 +55,30 @@ public class Player : MonoBehaviour {
         {
             Equip(inventory[0]);
         }
+
+        
+        
 	}
 
     //Methods
+    public void AddToInventory(GameItem item)
+    {
+        inventory.Add(item);
+    }
+    public float AngleLookAt(Vector3 p1, Vector3 p2) 
+    { 
+        float deltaY = p2.y - p1.y;
+        float deltaX = p2.x - p1.x;
+        return Mathf.Atan2(deltaY, deltaX) * 180 / Mathf.PI + 180; 
+    }
     public void GiveControl()
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * 5, 0.5f), Mathf.Lerp(0, Input.GetAxis("Vertical") * 5, 0.5f));
+        mouseCamera = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));
+        mouseCamera.z = 0;
+        float arrowAngle = AngleLookAt(mouseCamera, transform.position);
+        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, arrowAngle));
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, arrowAngle)), Time.deltaTime * speed/2);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * speed, 0.7f), Mathf.Lerp(0, Input.GetAxis("Vertical") * speed, 0.7f));
     }
     public void SetStats() //Method SetStats takes all of the stats from equipt armor and applies it to the player
     {
@@ -181,6 +200,15 @@ public class Player : MonoBehaviour {
         }
     }
 
+    //Debug Methods
+    void OnDrawGizmos()
+    { 
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position, 0.1f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(mouseCamera, 0.2f); 
+    }
+
 
     //Getters
     public float GetMaxHP() //Gets current float 'maxhp'
@@ -231,6 +259,10 @@ public class Player : MonoBehaviour {
     {
         return this.weapon;
     }
+    public float GetSpeed()
+    {
+        return this.speed;
+    }
 
     //setters
     public void SetMaxHP(float maxhp) //Gets current float 'maxhp'
@@ -280,6 +312,10 @@ public class Player : MonoBehaviour {
     public void SetWeapon(WeaponItem weapon) //Gets current WeaponItem 'weapon'
     {
         this.weapon = weapon;
+    }
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
     }
 
 }

@@ -4,13 +4,15 @@ Stereotypical 2D dungeon game, just to show what I can do/learn more on procedur
 
 Things to do:
 - Player
-- Equipment/item system
-- Procedural items?
+- stat effects (party finished)
 - Procedural Dungeon/map
 - Enemies
-- Loot system
 - Combat system
 - shop?
+- Buff system?
 
 Things done:
 - Created Project
+- Equipment/item system
+- Randomly Generated items
+- Loot system
