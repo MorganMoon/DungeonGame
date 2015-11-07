@@ -31,11 +31,12 @@ public class Player : MonoBehaviour {
         this.curhp = GetMaxHP(); //heals player all the way at start
 
         //all stuff below temporary for testing
-        SetHelmet(new HeadItem("Worn Leather Helmet", 10, 0, 1, 0, 0));
-        SetChest(new ChestItem("Worn Leather Chest", 1, 0, 3, 0, 0));
-        SetWeapon(new WeaponItem("Worn Practice Sword", 1, 0, 0, 0, 1, 1, 2));
+        SetHelmet(new HeadItem(1));
+        SetChest(new ChestItem(1));
+        SetWeapon(new WeaponItem(1));
 
-        inventory.Add(new HeadItem("Trashy Hat", 1, 0, 0, 0, 0));
+        inventory.Add(new LegItem(1));
+        inventory.Add(new GameItem());
         //legs = (LegItem)inventory[0];
 
         CheckLevelReq();
@@ -176,7 +177,7 @@ public class Player : MonoBehaviour {
         }
         else
         {
-            throw new Exception("Don't know how to equip " + item.GetType() + " Yet!");
+            throw new Exception("Don't know how to equip " + item.GetType() + " " + item.GetItemName() +" Yet!");
         }
     }
 

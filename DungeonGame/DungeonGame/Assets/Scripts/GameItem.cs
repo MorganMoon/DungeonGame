@@ -8,13 +8,26 @@ public class GameItem {
     private int goldWorth; //The amount of gold this item is worth
     private string itemName; //The name of the item
 
-    public GameItem(string itemName, int goldWorth) //Class constructor
+    public GameItem(string itemName, int goldWorth) //Class constructor 2 args
     {
         SetItemName(itemName);
         SetGoldWorth(goldWorth);
     }
 
+    public GameItem() //Class constructor 0 args
+    {
+        SetItemName(RandomName());
+        SetGoldWorth(Random.Range(1, 11));
+    }
+
     //Methods
+    public virtual string RandomName()
+    {
+        string[] first = {"Trashy ", "Old ", "Used ", "Crappy ", "Colorful ", "Broken ", "New "};
+        string[] second = {"Trash ", "Cloth ", "Garbage ", "Toy ", "Picture ", "Item ", "Flower", "Thing "};
+        string name = string.Concat(first[Random.Range(0, first.Length - 1)], second[Random.Range(0, second.Length - 1)]);
+        return name;
+    }
     
     //getters
     public int GetGoldWorth() //Gets int 'goldWorth'

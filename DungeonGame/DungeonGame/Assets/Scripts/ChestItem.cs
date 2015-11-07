@@ -12,6 +12,7 @@ public class ChestItem : GameItem
     private float crit;
     private int reqLevel;
 
+    //Chestitem constructor 6 arg
     public ChestItem(string itemName, int goldWorth, float defense, float endurance, float strength, float crit) : base(itemName, goldWorth)
     {
         SetDefense(defense);
@@ -19,6 +20,26 @@ public class ChestItem : GameItem
         SetEndurance(endurance);
         SetCrit(crit);
         SetReqLevel((int)Mathf.Max(Mathf.Max(defense, endurance), Mathf.Max(strength, crit)));
+    }
+    //Chest item constructor 1 arg
+    public ChestItem(int level)
+    {  
+        SetItemName(RandomName());
+        SetDefense(Random.Range(0, level+1));
+        SetStrength(Random.Range(0, level+1));
+        SetEndurance(Random.Range(0, level+1));
+        SetCrit(Random.Range(0, level+1));
+        SetReqLevel((int)Mathf.Max(Mathf.Max(defense, endurance), Mathf.Max(strength, crit)));
+        SetGoldWorth(Random.Range(1, GetReqLevel()));
+    }
+
+    //methods
+    public override string RandomName()
+    {
+        string[] first = { "Golden ", "Thick ", "Strong ", "Metal ", "Leather ", "Chain Mail ", "Wool ", "Scrappy ", "Worn ", "Used ", "Plate ", "Steel ", "Great "};
+        string[] second = { "Chest Peice ", "Torso Armor ", "Pauldrons ", "Cuirass ", "Chest Armor ", "Personal Armor ", "Shirt ", "Plackart ", "Tunic ", "Breastplate ", "Vest ", "Chestplate "};
+        string name = string.Concat(first[Random.Range(0, first.Length - 1)], second[Random.Range(0, second.Length - 1)]);
+        return name;
     }
 
     //getters

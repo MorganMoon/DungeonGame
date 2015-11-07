@@ -21,6 +21,27 @@ public class LegItem : GameItem
         SetReqLevel((int)Mathf.Max(Mathf.Max(defense, endurance), Mathf.Max(strength, crit)));
     }
 
+    //LegItem constructor 1 arg
+    public LegItem(int level)
+    {  
+        SetItemName(RandomName());
+        SetDefense(Random.Range(0, level+1));
+        SetStrength(Random.Range(0, level+1));
+        SetEndurance(Random.Range(0, level+1));
+        SetCrit(Random.Range(0, level+1));
+        SetReqLevel((int)Mathf.Max(Mathf.Max(defense, endurance), Mathf.Max(strength, crit)));
+        SetGoldWorth(Random.Range(1, GetReqLevel()));
+    }
+
+    //methods
+    public override string RandomName()
+    {
+        string[] first = { "Golden ", "Thick ", "Strong ", "Metal ", "Leather ", "Chain Mail ", "Wool ", "Scrappy ", "Worn ", "Used ", "Plate ", "Steel ", "Great " };
+        string[] second = { "Legs ", "Leg Armor ", "Leggings ", "Greaves ", "Legguards ", "Kilt ", "Breeches ", "Legwraps ", "Britches ", "Lower Robe ", "Skirt "};
+        string name = string.Concat(first[Random.Range(0, first.Length - 1)], second[Random.Range(0, second.Length - 1)]);
+        return name;
+    }
+
     //getters
     public float GetDefense()
     {
