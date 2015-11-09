@@ -29,14 +29,18 @@ public class Loot : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D coll)
     {
+        Pickup(coll);   
+    }
+
+    //Methods
+    void Pickup(Collider2D coll)
+    {
         if (coll.tag == "Player")
         {
             coll.GetComponent<Player>().AddToInventory(loot);
             Destroy(this.gameObject);
         }
     }
-
-    //Methods
     void Spin()
     {
         physics.AddTorque(20);
