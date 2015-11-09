@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 public class Node {
     private Vector2 position;
-    public List<Node> neighbors;
+    public List<Node> neighbors = new List<Node>();
     private bool walkable = true;
-    private float g, h, c = 1;
+    public float g, h, c = 1;
+    public float f;
+    public Node parent = null;
 
     //Constructor 1-arg
     public Node(Vector2 position)
@@ -17,10 +19,6 @@ public class Node {
     //getters
     public Vector2 GetPosition() { return this.position; }
     public bool GetWalkable() { return this.walkable;  }
-    public float GetG() { return this.g; }
-    public float GetH() { return this.h; }
-    public float GetC() { return this.c; }
-    public float GetF() { return GetG() + GetH(); }
     public bool getWalkable() { return this.walkable; }
 
     //setters
@@ -28,5 +26,7 @@ public class Node {
     {
         this.walkable = walkable;
     }
+    public void setG(float g) { this.g = g; }
+    public void setH(float h) { this.h = h; }
 
 }
