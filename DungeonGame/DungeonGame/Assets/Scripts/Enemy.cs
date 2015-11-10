@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy : Character {
 
@@ -8,6 +9,7 @@ public class Enemy : Character {
     private bool seeTarget;
     public GameObject loot;
     public LayerMask walls;
+    List<Node> pathFind = new List<Node>();
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +24,16 @@ public class Enemy : Character {
         SetStats();
         UseEndurance();
         SetCurHP(GetMaxHP()); //heals player all the way at start
+
+        FindCurNode();
+        pathFind = GetPathfinding().FindPath(GetCurNode(), GetGrid().grid[35, 52]);
+        //pathFind = GetPathfinding().FindPath(GetGrid().grid[0, 0], GetGrid().grid[25, 22]);
+        for (int i = 0; i < pathFind.Count - 1; i++)
+        {
+            Debug.DrawLine(pathFind[i].GetPosition(), pathFind[i + 1].GetPosition(), Color.green, 5);
+        }
+        Debug.Break();
+        
 	}
 	
 	// Update is called once per frame
@@ -31,8 +43,10 @@ public class Enemy : Character {
 
     void FixedUpdate()
     {
+        
         seeTarget = CanSeeTarget();
         LookAtTarget();
+        
     }
 
     //Methods 

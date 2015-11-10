@@ -24,12 +24,22 @@ public class Grid : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        foreach (Node neighbor in grid[5, 5].neighbors) Debug.DrawLine(grid[5, 5].GetPosition(), neighbor.GetPosition());
 	
 	}
     
 
     //methods
+    public Node WorldPositionToNode(Vector2 position)
+    {
+        float percentX = (position.x + adjustedSize.x/2) / adjustedSize.x;
+        float percentY = (position.y + adjustedSize.y/2) / adjustedSize.y;
+        percentX = Mathf.Clamp01(percentX);
+        percentY = Mathf.Clamp01(percentY);
+
+        int x = Mathf.RoundToInt((gridSizeX-1) * percentX);
+        int y = Mathf.RoundToInt((gridSizeY-1) * percentY);
+        return grid[x, y];
+    }
     void FindNeighbors(int x, int y)
     {
         int newX = x;
@@ -91,7 +101,7 @@ public class Grid : MonoBehaviour {
     //visual debugging
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(adjustedSize.x, adjustedSize.y, 1));
+        Gizmos.DrawWireCube(transform.position, new Vector3(size.x, size.y, 1));
         if (grid != null)
         {
             foreach (Node node in grid)

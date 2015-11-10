@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
 
     //Basic control variables
     private float speed = 5;
+    private Node curNode;
+    private Grid grid;
+    private Pathfinding pathfinding;
 
     //Basic player stats
     private float maxhp = 10.0f; //Player max health
@@ -25,9 +29,16 @@ public class Character : MonoBehaviour {
     private LegItem legs; //Player Leg Gear
     private WeaponItem weapon; //Players weapon
 
+    void Awake()
+    {
+        grid = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<Grid>();
+        pathfinding = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<Pathfinding>();
+
+    }
+
 	// Use this for initialization
 	void Start () {
-	
+        
 	}
 	
 	// Update is called once per frame
@@ -36,6 +47,10 @@ public class Character : MonoBehaviour {
 	}
 
     //Methods
+    public void FindCurNode()
+    {
+        SetCurNode(grid.WorldPositionToNode(transform.position));
+    }
     public void SetStats() //Method SetStats takes all of the stats from equipt armor and applies it to the player
     {
         //reset stats
@@ -77,6 +92,18 @@ public class Character : MonoBehaviour {
     }
 
     //Getters
+    public Grid GetGrid()
+    {
+        return this.grid;
+    }
+    public Pathfinding GetPathfinding()
+    {
+        return this.pathfinding;
+    }
+    public Node GetCurNode() //Gets current Node 'curNode'
+    {
+        return this.curNode;
+    }
     public float GetMaxHP() //Gets current float 'maxhp'
     {
         return this.maxhp;
@@ -127,6 +154,10 @@ public class Character : MonoBehaviour {
     }
 
     //setters
+    public void SetCurNode(Node curNode)
+    {
+        this.curNode = curNode;
+    }
     public void SetMaxHP(float maxhp) //Sets current float 'maxhp'
     {
         this.maxhp = maxhp;

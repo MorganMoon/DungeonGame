@@ -142,7 +142,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 978013006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.8499999, y: .349999994, z: 0}
+  m_LocalPosition: {x: 6.71999979, y: .479999989, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -260,7 +260,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1087043985}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -.0599999987, y: 1.16999996, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - 114: {fileID: 1828374619}
   m_Layer: 0
   m_Name: Pathfinding
-  m_TagString: Untagged
+  m_TagString: Pathfinder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeSize: .300000012
-  size: {x: 15.7399998, y: 20.1000004}
+  size: {x: 15, y: 20}
   walls:
     serializedVersion: 2
     m_Bits: 256
