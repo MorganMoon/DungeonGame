@@ -2,13 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public delegate void OnPathCompleteHandler(List<Node> path);
+
 public class Pathfinding : MonoBehaviour {
+    public event OnPathCompleteHandler OnPathCompleted;
 
     Grid grid;
     void Awake()
     {
         grid = GetComponent<Grid>();
-        
     }
 	// Use this for initialization
 	void Start () {
@@ -17,10 +19,9 @@ public class Pathfinding : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
 	}
 
-    public List<Node> FindPath(Node startPos, Node endPos)
+    public IEnumerator FindPath(Node startPos, Node endPos)
     {
         List<Node> path = new List<Node>();
         List<Node> openNodes = new List<Node>();
@@ -43,11 +44,12 @@ public class Pathfinding : MonoBehaviour {
 
             openNodes.Remove(currentNode);
             closedNodes.Add(currentNode);
-
+            //Debug.Log(currentNode.neighbors.Count);
             foreach (Node neighbor in currentNode.neighbors)
             {
                 if (closedNodes.Contains(neighbor)) continue;
                 if (!neighbor.getWalkable()) continue;
+                //Debug.Log(neighbor.parent == null ? "yes":"no");
                 if (neighbor.parent == null)
                 {
                     neighbor.g = currentNode.g + GetDistance(neighbor, currentNode);
@@ -75,7 +77,19 @@ public class Pathfinding : MonoBehaviour {
                 path.Reverse();
             }
         }
-        return path;
+        foreach (Node node in closedNodes)
+        {
+            node.g = 0;
+            node.h = 0;
+            node.parent = null;
+        }
+
+        if(OnPathCompleted != null)
+        {
+            OnPathCompleted(path);
+        }
+
+        yield return true;
     }
 
     int GetDistance(Node node1, Node node2)

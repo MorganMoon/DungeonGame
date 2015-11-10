@@ -11,6 +11,8 @@ public class Enemy : Character {
     public LayerMask walls;
     List<Node> pathFind = new List<Node>();
 
+    private float pathTimer = 0;
+
 	// Use this for initialization
 	void Start () {
         target = GameObject.FindGameObjectWithTag("Player");
@@ -25,27 +27,34 @@ public class Enemy : Character {
         UseEndurance();
         SetCurHP(GetMaxHP()); //heals player all the way at start
 
-        FindCurNode();
-        pathFind = GetPathfinding().FindPath(GetCurNode(), GetGrid().grid[35, 52]);
-        //pathFind = GetPathfinding().FindPath(GetGrid().grid[0, 0], GetGrid().grid[25, 22]);
-        for (int i = 0; i < pathFind.Count - 1; i++)
-        {
-            Debug.DrawLine(pathFind[i].GetPosition(), pathFind[i + 1].GetPosition(), Color.green, 5);
-        }
-        Debug.Break();
-        
+        GetPathfinding().OnPathCompleted += OnPathComplete;
 	}
+
+    private void OnPathComplete(List<Node> path)
+    {
+        pathFind = path;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        
+        if (pathTimer <= 0)
+        {
+            StartCoroutine(GetPathfinding().FindPath(GetCurNode(), GetGrid().grid[25, 22]));
+            pathTimer = 1.5f;
+        }
+        pathTimer -= Time.deltaTime;
 	}
 
     void FixedUpdate()
     {
-        
+        FindCurNode();
         seeTarget = CanSeeTarget();
         LookAtTarget();
+
+        for (int i = 0; i < pathFind.Count - 1; i++)
+        {
+            Debug.DrawLine(pathFind[i].GetPosition(), pathFind[i + 1].GetPosition(), Color.green);
+        }
         
     }
 

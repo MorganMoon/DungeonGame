@@ -31,8 +31,8 @@ public class Character : MonoBehaviour {
 
     void Awake()
     {
-        grid = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<Grid>();
-        pathfinding = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<Pathfinding>();
+        grid = GameObject.FindObjectOfType<Grid>();
+        pathfinding = GameObject.FindObjectOfType<Pathfinding>();
 
     }
 
