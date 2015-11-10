@@ -76,7 +76,7 @@ public class Grid : MonoBehaviour {
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector2 worldPosition = gridBottomLeft + Vector2.right * (x * nodeSize + nodeSize * 2) + Vector2.up * (y * nodeSize + nodeSize * 2);
-                grid[x, y] = new Node(worldPosition);
+                grid[x, y] = new Node(worldPosition, new Vector2(x, y));
             }
         }
         for (int x = 0; x < gridSizeX; x++)

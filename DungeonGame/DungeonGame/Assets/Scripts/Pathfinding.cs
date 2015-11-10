@@ -6,7 +6,7 @@ public class Pathfinding : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        List<Node> path = FindPath(GetComponent<Grid>().grid[0,0], GetComponent<Grid>().grid[10,15]);
+        List<Node> path = FindPath(GetComponent<Grid>().grid[0, 0], GetComponent<Grid>().grid[35, 52]);
         Debug.Log(path.Count);
 	}
 	
@@ -20,59 +20,61 @@ public class Pathfinding : MonoBehaviour {
         List<Node> path = new List<Node>();
         List<Node> openNodes = new List<Node>();
         List<Node> closedNodes = new List<Node>();
-        startPos.g = 0;
-        startPos.f = Vector2.Distance(startPos.GetPosition(), endPos.GetPosition()); // change to grid distance
         openNodes.Add(startPos);
-        Node currentNode = new Node(Vector2.zero);
         while (openNodes.Count > 0)
         {
-            float lowestScore = float.MaxValue;
-            foreach(Node node in openNodes){
-                if (node.f < lowestScore)
+            Node currentNode = openNodes[0];
+            for (int i = 1; i < openNodes.Count; i++)
+            {
+                if (openNodes[i].f < currentNode.f || openNodes[i].f == currentNode.f && openNodes[i].h < currentNode.h)
                 {
-                    currentNode = node;
-                    lowestScore = currentNode.f;
+                    currentNode = openNodes[i];
                 }
             }
+            openNodes.Remove(currentNode);
+            closedNodes.Add(currentNode);
+
             if (currentNode == endPos)
             {
-                closedNodes.Add(currentNode);
-                break;
-            }
-            else
-            {
-                closedNodes.Add(currentNode);
-                openNodes.Remove(currentNode);
-                foreach (Node neighbor in currentNode.neighbors)
+                while (currentNode != startPos)
                 {
-                    if (neighbor.parent == null)
-                    {
-                        neighbor.g = neighbor.c + currentNode.g;
-                        neighbor.h = Vector2.Distance(neighbor.GetPosition(), endPos.GetPosition());
-                        neighbor.f = neighbor.g + neighbor.h;
-                        neighbor.parent = currentNode;
+                    path.Add(currentNode);
+                    currentNode = currentNode.parent;
+                }
+                path.Reverse();
+            }
+
+            foreach(Node neighbor in currentNode.neighbors){
+                if (!neighbor.getWalkable() || closedNodes.Contains(neighbor))
+                {
+                    continue;
+                }
+
+                int costToNeighbor = currentNode.g + GetDistance(currentNode, neighbor);
+                if(costToNeighbor < neighbor.g || openNodes.Contains(neighbor)){
+                    neighbor.g = costToNeighbor;
+                    neighbor.h = GetDistance(neighbor, endPos);
+                    neighbor.parent = currentNode;
+
+                    if(!openNodes.Contains(neighbor)){
                         openNodes.Add(neighbor);
                     }
-                    else
-                    {
-                        if (currentNode.g + neighbor.c < neighbor.g)
-                        {
-                            neighbor.g = neighbor.c + currentNode.g;
-                            neighbor.h = Vector2.Distance(neighbor.GetPosition(), endPos.GetPosition());
-                            neighbor.f = neighbor.g + neighbor.h;
-                            neighbor.parent = currentNode;
-                        }
-                    }
                 }
-            }
-        }
-        path.Add(currentNode);
-        while (currentNode.parent != null)
-        {
-            currentNode = currentNode.parent;
-            path.Add(currentNode);
-        }
 
+            }  
+        }
         return path;
+    }
+
+    int GetDistance(Node node1, Node node2)
+    {
+        int distX = Mathf.Abs((int)node1.GetGridPos().x - (int)node2.GetGridPos().x);
+        int distY = Mathf.Abs((int)node1.GetGridPos().y - (int)node2.GetGridPos().y);
+
+        if (distX > distY)
+        {
+            return 14 * distY + 10 * (distX - distY);
+        }
+        return 14 * distX + 10 * (distY - distX);
     }
 }
