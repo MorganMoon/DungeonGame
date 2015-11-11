@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-public class Grid : MonoBehaviour {
+public class Grid : MonoBehaviour
+{
 
     public Node[,] grid;
+    public byte[,] mGrid;
     public float nodeSize;
     public Vector2 size;
     private int gridSizeX, gridSizeY;
@@ -11,42 +13,64 @@ public class Grid : MonoBehaviour {
     void Awake()
     {
         gridSizeX = Mathf.RoundToInt(size.x / (nodeSize));
-        gridSizeY = Mathf.RoundToInt(size.y / (nodeSize ));
+        gridSizeY = Mathf.RoundToInt(size.y / (nodeSize));
         adjustedSize = new Vector2(gridSizeX * nodeSize, gridSizeY * nodeSize);
         CreateGrid();
         CalculateCollision();
     }
 
-	// Use this for initialization
-	void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-    
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
 
     //methods
     public Node WorldPositionToNode(Vector2 position)
     {
-        float percentX = (position.x + adjustedSize.x/2) / adjustedSize.x;
-        float percentY = (position.y + adjustedSize.y/2) / adjustedSize.y;
+        float percentX = (position.x + adjustedSize.x / 2) / adjustedSize.x;
+        float percentY = (position.y + adjustedSize.y / 2) / adjustedSize.y;
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
-        int x = Mathf.RoundToInt((gridSizeX-1) * percentX);
-        int y = Mathf.RoundToInt((gridSizeY-1) * percentY);
+        int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
+        int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
         return grid[x, y];
     }
+
+    public Vector2 GetPos(Vector2 position)
+    {
+        float percentX = (position.x + adjustedSize.x / 2) / adjustedSize.x;
+        float percentY = (position.y + adjustedSize.y / 2) / adjustedSize.y;
+        percentX = Mathf.Clamp01(percentX);
+        percentY = Mathf.Clamp01(percentY);
+
+        int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
+        int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
+        return new Vector2(x, y);
+    }
+
+    public Vector2 NodeToWorldPosition(Vector2 position)
+    {
+        Vector2 gridBottomLeft = (Vector2)transform.position - Vector2.right * (adjustedSize.x / 2 + nodeSize * 1.5f) - Vector2.up * (adjustedSize.y / 2 + nodeSize * 1.5f);
+        Vector2 worldPosition = gridBottomLeft + Vector2.right * (position.x * nodeSize + nodeSize * 2) + Vector2.up * (position.y * nodeSize + nodeSize * 2);
+        return worldPosition;
+    }
+
     void FindNeighbors(int x, int y)
     {
         int newX = x;
         int newY = y;
         //right
         newX = x + 1; newY = y;
-        if (newX < gridSizeX ) { grid[x, y].neighbors.Add(grid[newX, newY]); }
+        if (newX < gridSizeX) { grid[x, y].neighbors.Add(grid[newX, newY]); }
         //left
         newX = x - 1; newY = y;
         if (newX > -1) { grid[x, y].neighbors.Add(grid[newX, newY]); }
@@ -64,7 +88,7 @@ public class Grid : MonoBehaviour {
         if (newY > -1 && newX > -1) { grid[x, y].neighbors.Add(grid[newX, newY]); }
         //lower right
         newX = x + 1; newY = y - 1;
-        if (newY > -1 && newX < gridSizeX ) { grid[x, y].neighbors.Add(grid[newX, newY]); }
+        if (newY > -1 && newX < gridSizeX) { grid[x, y].neighbors.Add(grid[newX, newY]); }
         //upper left
         newX = x - 1; newY = y + 1;
         if (newY < gridSizeY && newX > -1) { grid[x, y].neighbors.Add(grid[newX, newY]); }
@@ -77,16 +101,29 @@ public class Grid : MonoBehaviour {
             node.setWalkable(walkable);
         }
     }
+
+    byte CalculateWeigth(Vector2 pos)
+    {
+        bool walkable = !Physics2D.OverlapCircle(pos, 0.5f, walls);
+        if (!walkable)
+            return 0;
+        else
+            return 1;
+    }
+
     void CreateGrid()
     {
+        mGrid = new byte[gridSizeX, gridSizeY];
         grid = new Node[gridSizeX, gridSizeY];
-        Vector2 gridBottomLeft = (Vector2)transform.position - Vector2.right * (adjustedSize.x / 2  + nodeSize* 1.5f) - Vector2.up * (adjustedSize.y / 2 + nodeSize* 1.5f);
+        Vector2 gridBottomLeft = (Vector2)transform.position - Vector2.right * (adjustedSize.x / 2 + nodeSize * 1.5f) - Vector2.up * (adjustedSize.y / 2 + nodeSize * 1.5f);
 
-        for(int x = 0; x < gridSizeX; x++){
+        for (int x = 0; x < gridSizeX; x++)
+        {
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector2 worldPosition = gridBottomLeft + Vector2.right * (x * nodeSize + nodeSize * 2) + Vector2.up * (y * nodeSize + nodeSize * 2);
                 grid[x, y] = new Node(worldPosition, new Vector2(x, y));
+                mGrid[x, y] = CalculateWeigth(worldPosition); //Weight
             }
         }
         for (int x = 0; x < gridSizeX; x++)
@@ -95,20 +132,20 @@ public class Grid : MonoBehaviour {
             {
                 FindNeighbors(x, y);
             }
-        } 
+        }
     }
 
     //visual debugging
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(size.x, size.y, 1));
-        if (grid != null)
-        {
-            foreach (Node node in grid)
-            {
-                Gizmos.color = node.getWalkable() ? Color.red : Color.blue;
-                Gizmos.DrawCube(node.GetPosition(), new Vector3(0.1f, 0.1f, 1));
-            }
-        }
+        //if (grid != null)
+        //{
+        //    foreach (Node node in grid)
+        //    {
+        //        Gizmos.color = node.getWalkable() ? Color.red : Color.blue;
+        //        Gizmos.DrawCube(node.GetPosition(), new Vector3(0.1f, 0.1f, 1));
+        //    }
+        //}
     }
 }
