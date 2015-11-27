@@ -10,16 +10,23 @@ public class Enemy : Character
     private bool seeTarget;
     public GameObject loot;
     public LayerMask walls;
-    List<PathFinderNode> pathFind = new List<PathFinderNode>();
-    private PathSeeker seeker;
 
+    //Pathfinding
+    private Pathfinding pathfinding = new Pathfinding();
+    private Grid grid;
+
+    Node characterNode; // this
+    Node remCharacterNode;
+    Node targetNode; // target / player
+    Node remTargetNode;
+    Node[] path; //The path
     private float pathTimer = 0;
+    private int pathIndex = 0;
 
     // Use this for initialization
     void Start()
     {
-        seeker = GetComponent<PathSeeker>();
-        seeker.OnPathComplete += this.OnFastPathComplete;
+        grid = (Grid)GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<Grid>();
         target = GameObject.FindGameObjectWithTag("Player");
         SetLevel(target.GetComponent<Player>().GetLevel());
 
@@ -35,44 +42,50 @@ public class Enemy : Character
         //seeker.FindPath(seeker.UseGrid.WorldPositionToNode(target.transform.position), OnPathComplete);
     }
 
-    private void OnPathComplete(List<Node> path)
-    {
-        //pathFind = path;
-        //Debug.Log("Found path: " + path.Count);
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (pathTimer <= 0)
         {
-            //seeker.FindPath(seeker.UseGrid.WorldPositionToNode(target.transform.position), OnPathComplete);
-            seeker.FindPathFast(transform.position, target.transform.position);
-            pathTimer = 0.5f;
+            FindPath();
+            pathTimer = 1f;
         }
         pathTimer -= Time.deltaTime;
-    }
-
-    private void OnFastPathComplete(List<PathFinderNode> nodes)
-    {
-        pathFind = nodes;
-        Debug.Log("Found fast path: " + nodes.Count);
     }
 
     void FixedUpdate()
     {
         seeTarget = CanSeeTarget();
         LookAtTarget();
-
-        for (int i = 0; i < pathFind.Count - 1; i++)
-        {
-            Debug.Log(seeker.UseGrid.NodeToWorldPosition(pathFind[i].GetParentPosition()));
-            Debug.DrawLine(seeker.UseGrid.NodeToWorldPosition(pathFind[i].GetPosition()), seeker.UseGrid.NodeToWorldPosition(pathFind[i + 1].GetPosition()), Color.green);
-        }
-
+        FollowPath();
     }
 
     //Methods 
+    void FollowPath()
+    {
+        characterNode = grid.FindNodeFromPosition(transform.position);
+        if (path == null) return;
+        if (pathIndex < path.Length)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, path[pathIndex].position, Time.deltaTime * Random.Range(1, 6));
+        }
+        if (characterNode.position == path[pathIndex].position)
+        {
+            pathIndex++;
+        }
+    }
+    //Findpath fills Node[] path with a path of nodes
+    void FindPath()
+    {
+        if (target)
+            targetNode = grid.FindNodeFromPosition(target.transform.position);
+        if (characterNode != null && targetNode != null && (remCharacterNode != characterNode || remTargetNode != targetNode))
+        {
+            path = pathfinding.ReturnPath(characterNode, targetNode).ToArray();
+            remCharacterNode = characterNode;
+            remTargetNode = targetNode;
+        }
+    }
     //CanSeeTarget returns bool value based off whether or not the target is visible to Enemy
     bool CanSeeTarget()
     {

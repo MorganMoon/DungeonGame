@@ -187,7 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb59362fcf0bc6b48bad18cef37b0199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseGrid: {fileID: 1828374617}
 --- !u!1 &1087043985
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,7 +341,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1828374618}
   - 114: {fileID: 1828374617}
-  - 114: {fileID: 1828374619}
   m_Layer: 0
   m_Name: Pathfinding
   m_TagString: Pathfinder
@@ -358,14 +356,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1828374616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b754b0fc742054f909d0ad6a909eb6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f611b09d2c084c4d8be0273f55da1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeSize: .300000012
-  size: {x: 76.8000031, y: 76.8000031}
-  walls:
+  updateGrid: 0
+  diagonalNeighbors: 1
+  wall:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
+  nodeSize: .5
+  characterSize: 1
+  gridBoxSize: {x: 25, y: 25}
+  nodeDrawSize: {x: .0500000007, y: .0500000007, z: 0}
+  DrawGizmos: 1
 --- !u!4 &1828374618
 Transform:
   m_ObjectHideFlags: 0
@@ -378,17 +381,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
---- !u!114 &1828374619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1828374616}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f4124dd6d5f784599aaffa17de744f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2000671246
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +393,7 @@ GameObject:
   - 23: {fileID: 2000671248}
   - 61: {fileID: 2000671247}
   m_Layer: 8
-  m_Name: Quad
+  m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
