@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -42,7 +42,10 @@ public class Character : MonoBehaviour {
 	}
 
     //Methods
-    public void SetStats() //Method SetStats takes all of the stats from equipt armor and applies it to the player
+    ///<summary>
+    /// takes all of the stats from equipt armor and applies it to the player
+    ///</summary>
+    public void SetStats()
     {
         //reset stats
         SetDefense(0); SetStrength(0); SetEndurance(0); SetCrit(0);
@@ -77,7 +80,10 @@ public class Character : MonoBehaviour {
             SetCrit(GetCrit() + GetWeapon().GetCrit());
         }
     }
-    public void UseEndurance() //Method UseEndurance takes eache endurance point and adds it to the players float maxHP
+    ///<summary>
+    /// takes eache endurance point and adds it to the players float maxHP
+    ///</summary>
+    public void UseEndurance()
     {
         SetMaxHP(GetMaxHP() + GetEndurance());
     }

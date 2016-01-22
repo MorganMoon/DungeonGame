@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -20,8 +20,8 @@ public class Player : Character {
         //all stuff below temporary for testing
         SetHelmet(new HeadItem(1));
         SetChest(new ChestItem(1));
-        SetWeapon(new WeaponItem(1));
         SetLegs(new LegItem(1));
+        SetWeapon(new WeaponItem(1));
 
         CheckLevelReq();
         SetStats();
@@ -38,6 +38,9 @@ public class Player : Character {
         }       
 	}
     //Methods
+    ///<summary>
+    /// Adds GameItem 'item' into the player List<GameItem> inventory
+    ///</summary>
     public void AddToInventory(GameItem item)
     {
         inventory.Add(item);
@@ -48,6 +51,9 @@ public class Player : Character {
         float deltaX = p2.x - p1.x;
         return Mathf.Atan2(deltaY, deltaX) * 180 / Mathf.PI + 180; 
     }
+    ///<summary>
+    /// Gives control to the player, should be in FixedUpdate()
+    ///</summary>
     public void GiveControl()
     {
         mouseCamera = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));
@@ -57,7 +63,10 @@ public class Player : Character {
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, arrowAngle)), Time.deltaTime * GetSpeed()/2);
         GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * GetSpeed(), 0.7f), Mathf.Lerp(0, Input.GetAxis("Vertical") * GetSpeed(), 0.7f));
     }
-    public void RegenHP() //Method RegenHP checks if curHp is less than max HP and if it is, it heals the player and stops at maxhp
+    ///<summary>
+    /// Method RegenHP checks if curHp is less than max HP and if it is, it heals the player and stops at maxhp
+    ///</summary>
+    public void RegenHP()
     {
         if (GetCurHP() < GetMaxHP())
         {
@@ -68,7 +77,10 @@ public class Player : Character {
             SetCurHP(GetMaxHP());
         }
     }
-    public void CheckLevelReq() //Method CheckLevelReq gets the required level of each peice of equipt armor and will put it back in the inventory if it is too high of a level
+    ///<summary>
+    /// Method CheckLevelReq gets the required level of each peice of equipt armor and will put it back in the inventory if it is too high of a level
+    ///</summary>
+    public void CheckLevelReq() 
     {
         if (GetHelmet() != null && GetHelmet().GetReqLevel() > GetLevel())
         {
@@ -95,6 +107,9 @@ public class Player : Character {
             SetWeapon(null);
         }
     }
+    ///<summary>
+    /// Attempts to put GameItem 'item' as an equipped item on the player
+    ///</summary>
     public void Equip(GameItem item)
     {
         if (item is HeadItem)

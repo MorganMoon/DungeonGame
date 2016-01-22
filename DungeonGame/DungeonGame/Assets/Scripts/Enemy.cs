@@ -57,7 +57,8 @@ public class Enemy : Character
     {
         seeTarget = CanSeeTarget();
         LookAtTarget();
-        FollowPath();
+        if (CanSeeTarget())
+            FollowPath();
     }
 
     //Methods 
